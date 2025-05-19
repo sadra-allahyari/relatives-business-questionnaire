@@ -13,30 +13,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-
-const step1Schema = z.object({
-  firstName: z.string().min(1, "نام الزامی است"),
-  lastName: z.string().min(1, "نام خانوادگی الزامی است"),
-});
+import { step1Schema, step3Schema } from "@/lib/hooks/validations";
 
 type Step1Type = z.infer<typeof step1Schema>;
-
-const businessSchema = z.object({
-  businessName: z.string().min(1, "نام کسب و کار الزامی است"),
-  businessCategory: z.string().optional(),
-  businessLink: z.string().optional(),
-  businessWebsite: z.string().optional(),
-  businessContactNumber: z.coerce.number().min(1, "شماره کسب و کار الزامی است"),
-  businessAddress: z.string().min(1, "آدرس کسب و کار الزامی است"),
-  businessNote: z.string().optional(),
-  businessOwnerName: z.string().min(1, "نام صاحب کسب و کار الزامی است"),
-  businessOwnerRelation: z.string().optional(),
-});
-
-const step3Schema = z.object({
-  businesses: z.array(businessSchema).min(1, "حداقل یک کسب و کار را وارد کنید"),
-});
-
 type Step3Type = z.infer<typeof step3Schema>;
 
 export default function StepForm() {
