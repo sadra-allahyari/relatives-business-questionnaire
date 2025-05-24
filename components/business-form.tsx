@@ -10,16 +10,22 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   businessCategoryOptions,
   businessOwnerRelationOptions,
 } from "@/lib/hooks/constants";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "@/components/ui/command";
+import { ChevronDown } from "lucide-react";
 
 interface BusinessFormProps {
   index: number;
@@ -27,6 +33,21 @@ interface BusinessFormProps {
   canRemove: boolean;
 }
 
+/**
+ * A form component for editing information about a single business.
+ *
+ * This component is designed to be used inside a react-hook-form context.
+ * It manages a dynamic list of social media links for the business using
+ * `useFieldArray`. The form includes fields for business details such as
+ * name, category, website, contact number, address, notes, owner information,
+ * and relationship with the user.
+ *
+ * @param {BusinessFormProps} props - The props for the component.
+ * @param {number} props.index - The index of this business in the parent form's array.
+ * @param {() => void} props.onRemove - Callback to remove this business from the form.
+ * @param {boolean} props.canRemove - If true, shows a button to allow removing this business.
+ * @returns {JSX.Element} The rendered business form component.
+ */
 export function BusinessForm({
   index,
   onRemove,
@@ -40,7 +61,7 @@ export function BusinessForm({
     remove: removeLink,
   } = useFieldArray({
     control,
-    name: `businesses.${index}.businessLink`,
+    name: `businesses.${index}.business_link`,
   });
 
   return (
@@ -59,7 +80,7 @@ export function BusinessForm({
 
       <FormField
         control={control}
-        name={`businesses.${index}.businessName`}
+        name={`businesses.${index}.business_name`}
         render={({ field }) => (
           <FormItem>
             <FormLabel>نام کسب و کار</FormLabel>
@@ -78,7 +99,7 @@ export function BusinessForm({
           <FormField
             key={linkField.id}
             control={control}
-            name={`businesses.${index}.businessLink.${linkIndex}`}
+            name={`businesses.${index}.business_link.${linkIndex}`}
             render={({ field }) => (
               <FormItem className="relative">
                 <FormControl>
@@ -113,7 +134,7 @@ export function BusinessForm({
       {/* Other fields */}
       <FormField
         control={control}
-        name={`businesses.${index}.businessWebsite`}
+        name={`businesses.${index}.business_website`}
         render={({ field }) => (
           <FormItem>
             <FormLabel>وبسایت</FormLabel>
@@ -127,7 +148,7 @@ export function BusinessForm({
 
       <FormField
         control={control}
-        name={`businesses.${index}.businessContactNumber`}
+        name={`businesses.${index}.business_number`}
         render={({ field }) => (
           <FormItem>
             <FormLabel>شماره تماس کسب و کار</FormLabel>
@@ -154,7 +175,7 @@ export function BusinessForm({
 
       <FormField
         control={control}
-        name={`businesses.${index}.businessAddress`}
+        name={`businesses.${index}.business_address`}
         render={({ field }) => (
           <FormItem>
             <FormLabel>آدرس کسب و کار</FormLabel>
@@ -168,7 +189,7 @@ export function BusinessForm({
 
       <FormField
         control={control}
-        name={`businesses.${index}.businessNote`}
+        name={`businesses.${index}.business_note`}
         render={({ field }) => (
           <FormItem>
             <FormLabel>یادداشت</FormLabel>
@@ -182,7 +203,7 @@ export function BusinessForm({
 
       <FormField
         control={control}
-        name={`businesses.${index}.businessOwnerName`}
+        name={`businesses.${index}.business_owner_name`}
         render={({ field }) => (
           <FormItem>
             <FormLabel>نام صاحب کسب و کار</FormLabel>
@@ -196,30 +217,48 @@ export function BusinessForm({
 
       <FormField
         control={control}
-        name={`businesses.${index}.businessCategory`}
+        name={`businesses.${index}.business_category`}
         render={({ field }) => (
-          <FormItem>
+          <FormItem className="flex flex-col">
             <FormLabel>دسته‌بندی کسب و کار</FormLabel>
-            <Select
-              value={field.value}
-              onValueChange={field.onChange}
-              defaultValue={field.value}
-            >
-              <FormControl>
-                <SelectTrigger>
-                  <SelectValue placeholder="انتخاب دسته‌بندی" />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent>
-                {Object.entries(businessCategoryOptions).map(
-                  ([value, label]) => (
-                    <SelectItem key={value} value={value}>
-                      {label}
-                    </SelectItem>
-                  )
-                )}
-              </SelectContent>
-            </Select>
+            <Popover>
+              <PopoverTrigger asChild>
+                <FormControl>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    className="w-full justify-between"
+                  >
+                    {field.value ? field.value : "انتخاب دسته‌بندی"}
+                    <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </FormControl>
+              </PopoverTrigger>
+              <PopoverContent
+                side="bottom"
+                align="start"
+                className="w-full p-0 max-h-60 overflow-y-auto" // <== Added scrolling here
+              >
+                <Command>
+                  <CommandInput
+                    placeholder="جستجوی دسته‌بندی..."
+                    className="h-9"
+                  />
+                  <CommandEmpty>دسته‌بندی‌ای یافت نشد.</CommandEmpty>
+                  <CommandGroup>
+                    {businessCategoryOptions.map((option) => (
+                      <CommandItem
+                        key={option}
+                        value={option}
+                        onSelect={() => field.onChange(option)}
+                      >
+                        {option}
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </Command>
+              </PopoverContent>
+            </Popover>
             <FormMessage />
           </FormItem>
         )}
@@ -227,30 +266,45 @@ export function BusinessForm({
 
       <FormField
         control={control}
-        name={`businesses.${index}.businessOwnerRelation`}
+        name={`businesses.${index}.business_owner_relation`}
         render={({ field }) => (
-          <FormItem>
+          <FormItem className="flex flex-col">
             <FormLabel>نسبت با شما</FormLabel>
-            <Select
-              value={field.value}
-              onValueChange={field.onChange}
-              defaultValue={field.value}
-            >
-              <FormControl>
-                <SelectTrigger>
-                  <SelectValue placeholder="انتخاب نسبت" />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent>
-                {Object.entries(businessOwnerRelationOptions).map(
-                  ([value, label]) => (
-                    <SelectItem key={value} value={value}>
-                      {label}
-                    </SelectItem>
-                  )
-                )}
-              </SelectContent>
-            </Select>
+            <Popover>
+              <PopoverTrigger asChild>
+                <FormControl>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    className="w-full justify-between"
+                  >
+                    {field.value ? field.value : "انتخاب نسبت"}
+                    <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </FormControl>
+              </PopoverTrigger>
+              <PopoverContent
+                side="bottom"
+                align="start"
+                className="w-full p-0 max-h-60 overflow-y-auto"
+              >
+                <Command>
+                  <CommandInput placeholder="جستجوی نسبت..." className="h-9" />
+                  <CommandEmpty>نسبت یافت نشد.</CommandEmpty>
+                  <CommandGroup>
+                    {businessOwnerRelationOptions.map((option) => (
+                      <CommandItem
+                        key={option}
+                        value={option}
+                        onSelect={() => field.onChange(option)}
+                      >
+                        {option}
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </Command>
+              </PopoverContent>
+            </Popover>
             <FormMessage />
           </FormItem>
         )}
