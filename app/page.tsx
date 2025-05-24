@@ -3,6 +3,15 @@
 import StepForm from "@/components/step-form";
 import { ThemeToggle } from "@/components/theme-toggle";
 
+/**
+ * Home page component.
+ *
+ * Renders the main layout for the home page, including:
+ * - A theme toggle button positioned at the top-left corner.
+ * - A centered multi-step form component.
+ *
+ * @returns The home page React element.
+ */
 export default function Home() {
   return (
     <div className="min-h-screen bg-background text-foreground">

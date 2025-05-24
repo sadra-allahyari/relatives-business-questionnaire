@@ -9,8 +9,17 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { Sun, Moon } from "lucide-react";
+import { JSX } from "react";
 
-export function ThemeToggle() {
+/**
+ * A dropdown UI element to toggle between light, dark, and system theme modes.
+ *
+ * This component uses the `useTheme` hook from `next-themes` to update the app theme.
+ *
+ * @function
+ * @returns {JSX.Element} The theme toggle button and menu.
+ */
+export function ThemeToggle(): JSX.Element {
   const { setTheme } = useTheme();
 
   return (
