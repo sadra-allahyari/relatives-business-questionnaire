@@ -1,13 +1,21 @@
-export const businessOwnerRelationOptions: Record<string, string> = {
-  "0": "نامشخص",
-  "1": "خودم",
-  "2": "برادر",
-  "3": "خواهر",
-  "4": "پدر",
-  "5": "مادر",
-  "6": "دوست",
-  "7": "شریک کاری",
-  "8": "همکار",
-  "9": "نماینده",
-  "10": "سایر",
-};
+/**
+ * An array of options indicating the relationship between the respondent
+ * and the business owner. This is typically used in form UIs to collect
+ * contextual or legal relationship data.
+ *
+ * @const
+ * @type {readonly string[]}
+ */
+export const businessOwnerRelationOptions = [
+  "نامشخص",
+  "خودم",
+  "برادر",
+  "خواهر",
+  "پدر",
+  "مادر",
+  "دوست",
+  "شریک کاری",
+  "همکار",
+  "نماینده",
+  "سایر",
+] as const;
