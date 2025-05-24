@@ -1,3 +1,4 @@
-import { useBusinessCategories } from "@/lib/hooks/constants/business-category";
+import { businessCategoryOptions } from "@/lib/hooks/constants/business-category";
+import { businessOwnerRelationOptions } from "@/lib/hooks/constants/business-owner-relation";
 
-export { useBusinessCategories };
+export { businessCategoryOptions, businessOwnerRelationOptions };

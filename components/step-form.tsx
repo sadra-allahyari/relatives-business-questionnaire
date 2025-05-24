@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { useForm, useFieldArray, SubmitHandler } from "react-hook-form";
+import {
+  useForm,
+  useFieldArray,
+  SubmitHandler,
+  FormProvider,
+} from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -14,18 +19,18 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { step1Schema, step3Schema } from "@/lib/hooks/validations";
+import { BusinessForm } from "./business-form";
 
 type Step1Type = z.infer<typeof step1Schema>;
 type Step3Type = z.infer<typeof step3Schema>;
 
 export default function StepForm() {
-  const [step, setStep] = useState<1 | 2 | 3>(1);
+  const [step, setStep] = useState<0 | 1 | 2 | 3>(0);
 
   const step1Form = useForm<Step1Type>({
     resolver: zodResolver(step1Schema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
+      name: "",
     },
   });
 
@@ -35,14 +40,14 @@ export default function StepForm() {
       businesses: [
         {
           businessName: "",
-          businessCategory: "",
-          businessLink: "",
+          businessCategory: "0",
+          businessLink: [""],
           businessWebsite: "",
-          businessContactNumber: 0,
+          businessContactNumber: "",
           businessAddress: "",
           businessNote: "",
           businessOwnerName: "",
-          businessOwnerRelation: "",
+          businessOwnerRelation: "0",
         },
       ],
     },
@@ -67,6 +72,19 @@ export default function StepForm() {
 
   return (
     <div className="w-[400px] space-y-8">
+      {step === 0 && (
+        <div className="space-y-6 text-center">
+          <p className="text-muted-foreground">
+            در ادامه، اطلاعات کسب و کارها ازتون خواسته شده است، اگر بیش از یک
+            کسب و کار در اطرافیانتون دارید، با کلیک بر روی دکمه افزودن کسب و کار
+            جدید اضافه کنید.
+          </p>
+          <Button onClick={() => setStep(1)} className="w-full">
+            متوجه شدم
+          </Button>
+        </div>
+      )}
+
       {step === 1 && (
         <Form {...step1Form}>
           <form
@@ -75,25 +93,12 @@ export default function StepForm() {
           >
             <FormField
               control={step1Form.control}
-              name="firstName"
+              name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>نام</FormLabel>
+                  <FormLabel>نام و نام خانوادگی</FormLabel>
                   <FormControl>
-                    <Input placeholder="نام" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={step1Form.control}
-              name="lastName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>نام خانوادگی</FormLabel>
-                  <FormControl>
-                    <Input placeholder="نام خانوادگی" {...field} />
+                    <Input {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -109,207 +114,58 @@ export default function StepForm() {
       {step === 2 && (
         <div className="space-y-6 text-center">
           <p className="text-muted-foreground">
-            حالا وارد بخش اطلاعات تماس می‌شوید. لطفاً اطلاعات تماس خود را وارد
-            کنید.
+            در ادامه، اطلاعات کسب و کارها ازتون خواسته شده است، اگر بیش از یک
+            کسب و کار در اطرافیانتون دارید، با کلیک بر روی دکمه افزودن کسب و کار
+            جدید اضافه کنید.
           </p>
           <Button onClick={() => setStep(3)} className="w-full">
-            رفتن به فرم تماس
+            متوجه شدم
           </Button>
         </div>
       )}
 
       {step === 3 && (
-        <Form {...step3Form}>
-          <form
-            onSubmit={step3Form.handleSubmit(onSubmitStep3)}
-            className="space-y-6"
-          >
-            {fields.map((field, index) => (
-              <div
-                key={field.id}
-                className="space-y-4 border p-4 rounded-lg relative"
-              >
-                {fields.length > 1 && (
-                  <Button
-                    type="button"
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => remove(index)}
-                    className="absolute top-2 left-2"
-                  >
-                    حذف
-                  </Button>
-                )}
-
-                <FormField
-                  control={step3Form.control}
-                  name="businesses.0.businessName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>نام کسب و کار</FormLabel>
-                      <FormControl>
-                        <Input placeholder="مثال: کافی‌شاپ آریا" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={step3Form.control}
-                  name="businesses.0.businessCategory"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>دسته‌بندی کسب و کار</FormLabel>
-                      <FormControl>
-                        <Input placeholder="مثال: خوراک و نوشیدنی" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={step3Form.control}
-                  name="businesses.0.businessLink"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>لینک شبکه اجتماعی</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="مثال: instagram.com/aria_coffee"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={step3Form.control}
-                  name="businesses.0.businessWebsite"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>وبسایت</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="مثال: www.aria-coffee.ir"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={step3Form.control}
-                  name="businesses.0.businessContactNumber"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>شماره تماس کسب و کار</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="مثال: 09121234567"
-                          type="tel"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={step3Form.control}
-                  name="businesses.0.businessAddress"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>آدرس کسب و کار</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="مثال: تهران، خیابان ولیعصر، پلاک ۱۲۳"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={step3Form.control}
-                  name="businesses.0.businessNote"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>یادداشت (اختیاری)</FormLabel>
-                      <FormControl>
-                        <Input placeholder="توضیحات اضافی..." {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={step3Form.control}
-                  name="businesses.0.businessOwnerName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>نام صاحب کسب و کار</FormLabel>
-                      <FormControl>
-                        <Input placeholder="مثال: محمد رضایی" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={step3Form.control}
-                  name="businesses.0.businessOwnerRelation"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>نسبت با شما</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="مثال: برادر / خودم / همکار"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            ))}
-
-            <Button
-              type="button"
-              onClick={() =>
-                append({
-                  businessName: "",
-                  businessCategory: "",
-                  businessLink: "",
-                  businessWebsite: "",
-                  businessContactNumber: 0,
-                  businessAddress: "",
-                  businessNote: "",
-                  businessOwnerName: "",
-                  businessOwnerRelation: "",
-                })
-              }
-              className="w-full"
+        <FormProvider {...step3Form}>
+          <Form {...step3Form}>
+            <form
+              onSubmit={step3Form.handleSubmit(onSubmitStep3)}
+              className="space-y-6"
             >
-              افزودن کسب‌وکار جدید
-            </Button>
+              {fields.map((field, index) => (
+                <BusinessForm
+                  key={field.id}
+                  index={index}
+                  onRemove={() => remove(index)}
+                  canRemove={fields.length > 1}
+                />
+              ))}
 
-            <Button type="submit" className="w-full">
-              ارسال نهایی
-            </Button>
-          </form>
-        </Form>
+              <Button
+                type="button"
+                onClick={() =>
+                  append({
+                    businessName: "",
+                    businessCategory: "0",
+                    businessLink: [""],
+                    businessWebsite: "",
+                    businessContactNumber: "",
+                    businessAddress: "",
+                    businessNote: "",
+                    businessOwnerName: "",
+                    businessOwnerRelation: "0",
+                  })
+                }
+                className="w-full"
+              >
+                افزودن کسب‌وکار جدید
+              </Button>
+
+              <Button type="submit" className="w-full">
+                ارسال نهایی
+              </Button>
+            </form>
+          </Form>
+        </FormProvider>
       )}
     </div>
   );
