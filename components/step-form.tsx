@@ -41,7 +41,7 @@ export default function StepForm() {
         {
           businessName: "",
           businessCategory: "0",
-          businessLink: [""],
+          businessLink: [],
           businessWebsite: "",
           businessContactNumber: "",
           businessAddress: "",
@@ -146,7 +146,7 @@ export default function StepForm() {
                   append({
                     businessName: "",
                     businessCategory: "0",
-                    businessLink: [""],
+                    businessLink: [],
                     businessWebsite: "",
                     businessContactNumber: "",
                     businessAddress: "",
