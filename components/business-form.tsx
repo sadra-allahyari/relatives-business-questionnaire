@@ -12,7 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   businessCategoryOptions,
   businessOwnerRelationOptions,
-} from "@/lib/hooks/constants";
+} from "@/lib/constants";
 import {
   Popover,
   PopoverTrigger,

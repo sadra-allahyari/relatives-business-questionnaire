@@ -19,7 +19,7 @@ import {
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { step1Schema, step3Schema } from "@/lib/hooks/validations";
+import { step1Schema, step3Schema } from "@/lib/validations";
 import { BusinessForm } from "@/components/business-form";
 
 type Step1Type = z.infer<typeof step1Schema>;
@@ -47,17 +47,17 @@ export default function StepForm(): JSX.Element {
    * Prevent closing or refreshing the page while form submission is in progress.
    */
   useEffect(() => {
+    if (typeof window === "undefined") return;
+
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (isSubmitting) {
         e.preventDefault();
+        e.returnValue = ""; // required for some browsers
       }
     };
 
     window.addEventListener("beforeunload", handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, [isSubmitting]);
 
   const step1Form = useForm<Step1Type>({

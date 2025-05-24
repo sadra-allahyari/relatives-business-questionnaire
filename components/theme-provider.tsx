@@ -13,7 +13,7 @@ import { ThemeProvider as NextThemesProvider } from "next-themes";
  *   Props forwarded to the underlying `NextThemesProvider`, including children.
  * @returns {JSX.Element} The wrapped application with theme support.
  */
-export function ThemeProvider({
+export default function ThemeProvider({
   children,
   ...props
 }: React.ComponentProps<typeof NextThemesProvider>): React.JSX.Element {

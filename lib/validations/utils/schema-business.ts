@@ -1,20 +1,5 @@
 import { z } from "zod";
-import {
-  businessCategoryOptions,
-  businessOwnerRelationOptions,
-} from "@/lib/hooks/constants";
-
-/**
- * Enum schema for validating a business category selected from predefined options.
- * @const
- */
-const businessCategoryEnum = z.enum(businessCategoryOptions);
-
-/**
- * Enum schema for validating the relationship between the user and the business owner.
- * @const
- */
-const businessOwnerRelationEnum = z.enum(businessOwnerRelationOptions);
+import { businessCategoryEnum, businessOwnerRelationEnum } from "@/lib/enums";
 
 /**
  * Zod schema used to validate business form data.

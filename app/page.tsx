@@ -1,7 +1,7 @@
 "use client";
 
 import StepForm from "@/components/step-form";
-import { ThemeToggle } from "@/components/theme-toggle";
+import ThemeToggle from "@/components/theme-toggle";
 
 /**
  * Home page component.

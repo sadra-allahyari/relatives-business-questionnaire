@@ -19,7 +19,7 @@ import { JSX } from "react";
  * @function
  * @returns {JSX.Element} The theme toggle button and menu.
  */
-export function ThemeToggle(): JSX.Element {
+export default function ThemeToggle(): JSX.Element {
   const { setTheme } = useTheme();
 
   return (
