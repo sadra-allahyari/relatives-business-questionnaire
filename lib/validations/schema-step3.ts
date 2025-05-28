@@ -53,8 +53,7 @@ const businessSchema = z.object({
    */
   business_number: z
     .string()
-    .length(11, "شماره تماس باید ۱۱ رقم باشد")
-    .regex(/^09\d{9}$/, "شماره تماس باید با 09 شروع شده و ۱۱ رقم باشد")
+    .regex(/^0/, "شماره تماس باید با ۰ شروع شود")
     .transform((val) => val.replace(/^0/, "+98")),
 
   /**
