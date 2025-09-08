@@ -37,4 +37,5 @@ export const businessCategoryOptions = [
   "املاک و مستغلات",
   "تحقیق و توسعه",
   "خدمات اجتماعی و خیریه",
+  "صادرات و واردات",
 ] as const;
