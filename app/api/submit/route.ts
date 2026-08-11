@@ -15,6 +15,7 @@ function isErrorMessage(error: unknown): error is { message: string } {
  *
  * Expects the request body to contain:
  * - `name`: string (user name)
+ * - `email`: string (user email)
  * - `businesses`: array of business objects, each with properties like
  *    `business_name`, `business_category`, `business_link`, etc.
  *
@@ -37,7 +38,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const { name, businesses } = body;
+  const { name, email, businesses } = body;
 
   if (!Array.isArray(businesses)) {
     return NextResponse.json(
@@ -54,6 +55,7 @@ export async function POST(req: NextRequest) {
       const row = {
         date_and_time: now,
         name: name ?? "",
+        email: email ?? "",
         business_name: business.business_name ?? "",
         business_category: business.business_category ?? "",
         business_link: Array.isArray(business.business_link)

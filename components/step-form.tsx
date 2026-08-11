@@ -30,7 +30,7 @@ type Step3Type = z.infer<typeof step3Schema>;
  *
  * The form proceeds through four steps:
  * - Step 0: Welcome message and start button.
- * - Step 1: Collect user's full name.
+ * - Step 1: Collect user's full name and email.
  * - Step 2: Instructions for adding business information.
  * - Step 3: Collect multiple business details with dynamic form fields.
  *
@@ -64,6 +64,7 @@ export default function StepForm(): JSX.Element {
     resolver: zodResolver(step1Schema),
     defaultValues: {
       name: "",
+      email: "",
     },
   });
 
@@ -162,6 +163,19 @@ export default function StepForm(): JSX.Element {
                   <FormLabel>نام و نام خانوادگی</FormLabel>
                   <FormControl>
                     <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={step1Form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>ایمیل</FormLabel>
+                  <FormControl>
+                    <Input type="email" dir="ltr" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
